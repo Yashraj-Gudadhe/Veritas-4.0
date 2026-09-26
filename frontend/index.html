@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VERITAS — Evidence-Aware Decision Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <header class="top-nav">
+            <div class="nav-brand">
+                <div class="brand-logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="m9 12 2 2 4-4"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="brand-title">VERITAS</div>
+                    <div class="brand-subtitle">Evidence-Aware Medical Decision Intelligence</div>
+                </div>
+            </div>
+
+            <div class="nav-metrics">
+                <div class="metric-pill">
+                    <span class="status-dot live"></span>
+                    <span class="pill-label">PRIMARY:</span>
+                    <span id="nav-primary-llm" class="pill-val">Grok (xAI)</span>
+                </div>
+                <div class="metric-pill">
+                    <span class="pill-label">FALLBACK:</span>
+                    <span id="nav-fallback-llm" class="pill-val">Gemini 1.5</span>
+                </div>
+                <div class="metric-pill">
+                    <span class="pill-label">LOCAL MEDLINE:</span>
+                    <span id="nav-local-chunks" class="pill-val">Indexed</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace Grid -->
+        <main class="workspace-grid">
+            <!-- Left Panel: Input & Controls -->
+            <section class="control-panel">
+                <!-- Demo Fixture Selector -->
+                <div class="card demo-selector-card">
+                    <div class="card-header">
+                        <span class="section-badge">HACKATHON DEMOS</span>
+                        <h3>Quick Clinical Cases</h3>
+                    </div>
+                    <div class="demo-buttons" id="demo-buttons">
+                        <button class="demo-btn active" data-demo="demo-1">
+                            <span class="demo-tag status-supported">SUPPORTED</span>
+                            <span class="demo-title">Normal Adult Blood Pressure</span>
+                        </button>
+                        <button class="demo-btn" data-demo="demo-2">
+                            <span class="demo-tag status-conflicting">CONFLICTING</span>
+                            <span class="demo-title">ACC/AHA vs ESC Guideline Criteria</span>
+                        </button>
+                        <button class="demo-btn" data-demo="demo-3">
+                            <span class="demo-tag status-missing">INCOMPLETE</span>
+                            <span class="demo-title">Isolated Low BP (85/55 mmHg)</span>
+                        </button>
+                        <button class="demo-btn" data-demo="demo-4">
+                            <span class="demo-tag status-questionable">QUESTIONABLE</span>
+                            <span class="demo-title">Unverified Blog Therapy Claim</span>
+                        </button>
+                        <button class="demo-btn" data-demo="demo-5">
+                            <span class="demo-tag status-inconclusive">NO CONCLUSION</span>
+                            <span class="demo-title">Hemolyzed Specimen Fragment</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Document Upload & Input Area -->
+                <div class="card input-card">
+                    <div class="card-header">
+                        <span class="section-badge">DOCUMENT INGESTION</span>
+                        <h3>Upload Medical Report</h3>
+                    </div>
+
+                    <div class="drop-zone" id="drop-zone">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                        <p class="drop-text">Drag & drop PDF report, prescription, or lab summary</p>
+                        <span class="drop-sub">or click to browse (.pdf)</span>
+                        <input type="file" id="file-input" accept=".pdf" style="display: none;">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="doc-text-preview">Document Text / Findings</label>
+                        <textarea id="doc-text-preview" rows="4" placeholder="Clinical text extracted from PDF or demo case..."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="user-query-input">Assessment Query / Clinical Question</label>
+                        <input type="text" id="user-query-input" placeholder="e.g. Is this blood pressure reading within the standard reference range?">
+                    </div>
+
+                    <button id="btn-run-audit" class="btn-primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span>Audit Evidence & Evaluate</span>
+                    </button>
+                </div>
+
+                <!-- Realtime Pipeline Telemetry -->
+                <div class="card telemetry-card">
+                    <div class="card-header">
+                        <span class="section-badge">PIPELINE AUDIT</span>
+                        <h3>Execution Log</h3>
+                    </div>
+                    <div class="pipeline-steps" id="pipeline-steps">
+                        <div class="pipe-step" id="step-ingest"><span class="step-num">1</span> PDF Ingestion & OCR Check</div>
+                        <div class="pipe-step" id="step-extract"><span class="step-num">2</span> Observation & Claim Extraction</div>
+                        <div class="pipe-step" id="step-rag"><span class="step-num">3</span> MedlinePlus & Authoritative Routing</div>
+                        <div class="pipe-step" id="step-score"><span class="step-num">4</span> 5-Factor Scoring & Conflict Engine</div>
+                        <div class="pipe-step" id="step-gate"><span class="step-num">5</span> VERITAS Decision Gate</div>
+                    </div>
+                    <div class="audit-log-box" id="audit-log-box">
+                        <div class="log-entry system">System initialized. Ready for clinical evidence audit.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Evidence Audit Dashboard -->
+            <section class="audit-dashboard" id="audit-dashboard">
+                <!-- Final Status & Decision Banner -->
+                <div class="status-banner" id="status-banner">
+                    <div class="status-content">
+                        <div class="status-label">VERITAS DECISION GATE</div>
+                        <h2 class="status-title" id="status-title">AWAITING AUDIT</h2>
+                        <p class="status-summary" id="status-summary">Select a demo scenario or upload a clinical document to audit evidence sufficiency.</p>
+                    </div>
+                    <div class="status-badge-container">
+                        <div class="decision-pill" id="decision-pill">READY</div>
+                        <div class="human-review-badge" id="human-review-badge" style="display: none;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                <line x1="12" y1="9" x2="12" y2="13"/>
+                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                            HUMAN REVIEW REQUIRED
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multi-Dimension Evidence Quality Score Card -->
+                <div class="card score-card">
+                    <div class="card-header">
+                        <span class="section-badge">HEURISTIC EVALUATION</span>
+                        <h3>VERITAS Evidence Quality Index</h3>
+                    </div>
+                    <div class="score-grid">
+                        <div class="composite-score-box">
+                            <div class="score-number" id="composite-score-num">--</div>
+                            <div class="score-max">/ 100</div>
+                            <div class="score-tier" id="composite-tier">AWAITING</div>
+                        </div>
+                        <div class="dimension-bars">
+                            <div class="dim-row">
+                                <div class="dim-info"><span>Authority (30%)</span><strong id="dim-auth">--%</strong></div>
+                                <div class="dim-bar-track"><div class="dim-bar-fill" id="bar-auth" style="width: 0%"></div></div>
+                            </div>
+                            <div class="dim-row">
+                                <div class="dim-info"><span>Relevance (25%)</span><strong id="dim-rel">--%</strong></div>
+                                <div class="dim-bar-track"><div class="dim-bar-fill" id="bar-rel" style="width: 0%"></div></div>
+                            </div>
+                            <div class="dim-row">
+                                <div class="dim-info"><span>Recency (15%)</span><strong id="dim-rec">--%</strong></div>
+                                <div class="dim-bar-track"><div class="dim-bar-fill" id="bar-rec" style="width: 0%"></div></div>
+                            </div>
+                            <div class="dim-row">
+                                <div class="dim-info"><span>Methodology (15%)</span><strong id="dim-meth">--%</strong></div>
+                                <div class="dim-bar-track"><div class="dim-bar-fill" id="bar-meth" style="width: 0%"></div></div>
+                            </div>
+                            <div class="dim-row">
+                                <div class="dim-info"><span>Traceability (15%)</span><strong id="dim-trac">--%</strong></div>
+                                <div class="dim-bar-track"><div class="dim-bar-fill" id="bar-trac" style="width: 0%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Findings (Structured Observations) -->
+                <div class="card findings-card">
+                    <div class="card-header">
+                        <span class="section-badge">DOCUMENT PROVENANCE</span>
+                        <h3>Extracted Clinical Observations</h3>
+                    </div>
+                    <div class="findings-grid" id="findings-grid">
+                        <div class="empty-state">No observations extracted yet.</div>
+                    </div>
+                </div>
+
+                <!-- Explanation & Citation grounded narrative -->
+                <div class="card explanation-card">
+                    <div class="card-header">
+                        <span class="section-badge">SYNTHESIS & AUDIT</span>
+                        <h3>Clinical Evidence Audit Narrative</h3>
+                    </div>
+                    <div class="explanation-body" id="explanation-body">
+                        Audit narrative with interactive citations will appear here once evaluation runs.
+                    </div>
+                    <div class="citation-pills-row" id="citation-pills-row">
+                        <!-- Clickable citation tags [EV-001] rendered here -->
+                    </div>
+                </div>
+
+                <!-- Conflicting Evidence Comparison (Shown when conflicts exist) -->
+                <div class="card conflict-card" id="conflict-section" style="display: none;">
+                    <div class="card-header">
+                        <span class="section-badge warning">DIVERGENT GUIDELINES</span>
+                        <h3>Conflicting Evidence Comparison</h3>
+                    </div>
+                    <div class="conflict-container" id="conflict-container">
+                        <!-- Dynamic split screen comparison -->
+                    </div>
+                </div>
+
+                <!-- Missing Clinical Context Checklist -->
+                <div class="card missing-card" id="missing-section" style="display: none;">
+                    <div class="card-header">
+                        <span class="section-badge alert">COMPLETENESS CHECK</span>
+                        <h3>Missing Clinical Parameters</h3>
+                    </div>
+                    <div class="missing-list" id="missing-list">
+                        <!-- Dynamic list of missing critical/important context -->
+                    </div>
+                </div>
+
+                <!-- Supporting Authoritative Sources -->
+                <div class="card supporting-card">
+                    <div class="card-header">
+                        <span class="section-badge success">CORROBORATED EVIDENCE</span>
+                        <h3>Supporting Authoritative Evidence</h3>
+                    </div>
+                    <div class="evidence-list" id="supporting-list">
+                        <div class="empty-state">No supporting evidence yet.</div>
+                    </div>
+                </div>
+
+                <!-- Questionable Evidence Section -->
+                <div class="card questionable-card" id="questionable-section" style="display: none;">
+                    <div class="card-header">
+                        <span class="section-badge danger">UNVERIFIED OR LOW-QUALITY</span>
+                        <h3>Questionable Evidence</h3>
+                    </div>
+                    <div class="evidence-list" id="questionable-list"></div>
+                </div>
+
+                <!-- Interactive Evidence Map / Graph -->
+                <div class="card graph-card">
+                    <div class="card-header">
+                        <span class="section-badge">RELATIONSHIP GRAPH</span>
+                        <h3>Evidence Topology Map</h3>
+                    </div>
+                    <div class="graph-canvas-container" id="graph-container">
+                        <svg id="evidence-svg" width="100%" height="260"></svg>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Evidence Citation Modal Popup -->
+    <div class="modal-overlay" id="citation-modal" style="display: none;">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-ev-id">Citation [EV-001]</div>
+                <button class="modal-close" id="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4 id="modal-source-title">Source Title</h4>
+                <div class="modal-meta-grid">
+                    <div><strong>Source:</strong> <span id="modal-source-name">WHO</span></div>
+                    <div><strong>Quality Score:</strong> <span id="modal-score">92/100</span></div>
+                    <div><strong>Published:</strong> <span id="modal-date">2023-01-01</span></div>
+                    <div><strong>Tier:</strong> <span id="modal-tier">Tier 1 (Official)</span></div>
+                </div>
+                <div class="modal-excerpt" id="modal-excerpt">Excerpt...</div>
+                <div class="modal-link-box">
+                    <a id="modal-url" href="#" target="_blank" rel="noopener">Open Source Provenance &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

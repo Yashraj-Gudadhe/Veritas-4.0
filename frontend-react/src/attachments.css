@@ -1,0 +1,75 @@
+
+/* Attachment UI */
+.attachment-preview {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 10px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 300px;
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+}
+.preview-image {
+  max-height: 60px;
+  max-width: 80px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+.preview-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.remove-btn {
+  background: rgba(0,0,0,0.05);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.remove-btn:hover {
+  background: rgba(0,0,0,0.1);
+  color: var(--danger);
+}
+.attach-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), background var(--transition);
+}
+.attach-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.attach-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input-container {
+  position: relative;
+}

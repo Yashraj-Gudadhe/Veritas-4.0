@@ -1,0 +1,47 @@
+[
+  {
+    "id": "demo-1",
+    "name": "DEMO 1 — SUPPORTED (Blood Pressure Guideline Alignment)",
+    "description": "Standard adult blood pressure reading verified against MedlinePlus and WHO official guidance.",
+    "document_text": "PATIENT CLINICAL VITAL SIGNS\nPatient: John Doe, Age: 42\nClinical Findings:\nBlood Pressure: 118/76 mmHg\nHeart Rate: 72 bpm\nOxygen Saturation: 99%\nAssessment: Normotensive adult examination.",
+    "user_query": "Is this blood pressure reading within the healthy adult reference range?",
+    "expected_status": "SUPPORTED",
+    "synthetic": true
+  },
+  {
+    "id": "demo-2",
+    "name": "DEMO 2 — CONFLICTING (ACC/AHA vs ESC Diagnostic Thresholds)",
+    "description": "Demonstrates conflict detection between ACC/AHA Stage 1 Hypertension (>=130/80) vs ESC/ESH criteria (>=140/90).",
+    "document_text": "CARDIOVASCULAR HEALTH CHECK\nPatient: Jane Smith, Age: 55\nVital Signs:\nBlood Pressure: 134/84 mmHg\nHeart Rate: 78 bpm\nClaim: Patient has Stage 1 Hypertension requiring immediate pharmacotherapy.",
+    "user_query": "Does a blood pressure of 134/84 mmHg definitively confirm hypertension requiring drug therapy across all major guidelines?",
+    "expected_status": "CONFLICTING",
+    "synthetic": true
+  },
+  {
+    "id": "demo-3",
+    "name": "DEMO 3 — INCOMPLETE (Single Isolated Hypotension Reading)",
+    "description": "Single low blood pressure reading (85/55 mmHg) without repeat measurement, symptoms, or medication context.",
+    "document_text": "OUTPATIENT TRIAGE NOTE\nPatient: Alex Kumar, Age: 26\nVital Signs:\nBlood Pressure: 85/55 mmHg\nPulse: 68 bpm\nNo other notes recorded.",
+    "user_query": "Does this report prove the patient has pathological hypotension causing clinical harm?",
+    "expected_status": "ADDITIONAL_INFORMATION_REQUIRED",
+    "synthetic": true
+  },
+  {
+    "id": "demo-4",
+    "name": "DEMO 4 — QUESTIONABLE (Unverified Low-Authority Source)",
+    "description": "Claims based on an unverified commercial blog with no clinical trials or peer-reviewed citations.",
+    "document_text": "ALTERNATIVE HEALTH NEWSLETTER\nArticle Excerpt:\nClaim: Drinking raw celery juice cures Stage 2 hypertension within 48 hours without any need for prescription medication.\nSource: HolisticHealthBuzz Blog (2019).",
+    "user_query": "Is celery juice proven to replace antihypertensive medications?",
+    "expected_status": "QUESTIONABLE",
+    "synthetic": true
+  },
+  {
+    "id": "demo-5",
+    "name": "DEMO 5 — NO RELIABLE CONCLUSION (Inconclusive / Ambiguous)",
+    "description": "Uninterpretable fragmented laboratory data where no defensible clinical conclusion can be reached.",
+    "document_text": "LAB FRAGMENT #9102\nTest: Unknown Biomarker X-14 = 4.2 units\nSpecimen hemolyzed.\nNo clinical history available.",
+    "user_query": "What diagnosis does this test prove?",
+    "expected_status": "NO_RELIABLE_CONCLUSION",
+    "synthetic": true
+  }
+]

@@ -42,6 +42,7 @@ export default function RegisterPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <img src="/veritas-logo.png" alt="VERITAS" style={{ height: "80px", width: "auto", display: "block", margin: "0 auto 1rem auto" }} />
         <div className="auth-logo">
           <div className="auth-logo-icon"><ShieldIcon /></div>
           <div>

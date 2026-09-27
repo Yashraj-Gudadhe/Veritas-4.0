@@ -232,7 +232,7 @@ export default function ChatPage() {
             {isNewChat && messages.length === 0 && (
               <div className="welcome-screen">
                 <div className="welcome-logo">
-                  <ShieldIcon />
+                  <img src="/veritas-logo.png" alt="VERITAS" style={{ height: "80px", width: "auto", mixBlendMode: "multiply" }} />
                 </div>
                 <h2 className="welcome-title">VERITAS</h2>
                 <p className="welcome-sub">

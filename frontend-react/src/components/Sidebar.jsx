@@ -126,7 +126,7 @@ export default function Sidebar({ conversations, onNewChat, onConversationsChang
         <div className="sidebar-top">
           <div className="sidebar-logo">
             <div className="logo-icon">
-              <ShieldIcon />
+              <img src="/veritas-logo.png" alt="VERITAS" style={{ height: "2rem", width: "auto", mixBlendMode: "multiply" }} />
             </div>
             <div>
               <div className="logo-text">VERITAS</div>

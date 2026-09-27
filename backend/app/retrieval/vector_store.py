@@ -144,9 +144,13 @@ class LocalVectorStore:
 
     def _load_if_exists(self) -> None:
         # Warm up the model so the first-run download happens at startup
+        # Unless GOOGLE_API_KEY is set (which means we use lightweight API embeddings)
         try:
-            self.get_model()
-            logger.info("Semantic embedding model loaded: all-MiniLM-L6-v2")
+            if not os.getenv("GOOGLE_API_KEY"):
+                self.get_model()
+                logger.info("Semantic embedding model loaded: all-MiniLM-L6-v2")
+            else:
+                logger.info("GOOGLE_API_KEY found. Skipping local PyTorch model load to save memory.")
         except Exception as e:
             logger.error(f"Failed to load embedding model: {e}")
             return  # Fall back to empty index — online adapters will handle evidence
@@ -275,8 +279,18 @@ class LocalVectorStore:
         obs_types = obs_types or []
 
         try:
-            model = self.get_model()
-            query_vec = model.encode([query], convert_to_numpy=True).astype(np.float32)
+            if os.getenv("GOOGLE_API_KEY"):
+                from app.retrieval.embeddings import ResilientGoogleEmbeddings
+                google_emb = ResilientGoogleEmbeddings(
+                    model_name="models/gemini-embedding-001",
+                    api_key=os.getenv("GOOGLE_API_KEY")
+                )
+                raw_emb = google_emb.embed_query(query)
+                query_vec = np.array(raw_emb, dtype=np.float32).reshape(1, -1)
+            else:
+                model = self.get_model()
+                query_vec = model.encode([query], convert_to_numpy=True).astype(np.float32)
+
             faiss.normalize_L2(query_vec)
 
             # Retrieve more candidates than top_k to allow for post-filtering

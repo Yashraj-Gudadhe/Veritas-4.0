@@ -3,8 +3,14 @@
  */
 import axios from 'axios';
 
+// Determine the base URL. If VITE_API_URL is provided (e.g., in production), append '/api'.
+// Otherwise, default to '/api' for local development.
+const baseURL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api` 
+  : '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL,
   headers: { 'Content-Type': 'application/json' },
 });
 
